@@ -1,4 +1,6 @@
+using Application.Shared.Common.EventHandlers;
 using CleanArchitecture.Application;
+using CleanArchitecture.Application.Common.Hubs;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Persistence;
@@ -6,6 +8,7 @@ using CleanArchitecture.WebUI.Filters;
 using CleanArchitecture.WebUI.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
@@ -40,6 +43,14 @@ public class Startup
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
         services.AddRazorPages();
+
+        services.AddSignalR()
+            .AddJsonProtocol(o => o.PayloadSerializerOptions.Converters.Add(new NotificationJsonConverter()));
+        services.AddResponseCompression(opts =>
+        {
+            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                new[] { "application/octet-stream" });
+        });
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => 
@@ -104,6 +115,7 @@ public class Startup
                 name: "default",
                 pattern: "{controller}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
+            endpoints.MapHub<NotificationHub>("/notifications");
         });
 
         app.UseSpa(spa =>
