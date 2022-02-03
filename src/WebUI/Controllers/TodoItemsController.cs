@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Models;
+﻿using Application.Shared.TodoItems.Queries.GetTodoItemsWithPagination;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 using CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem;
 using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;

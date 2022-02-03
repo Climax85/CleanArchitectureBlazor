@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Mappings;
+﻿using Application.Shared.Common.Mappings;
+using Application.Shared.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;

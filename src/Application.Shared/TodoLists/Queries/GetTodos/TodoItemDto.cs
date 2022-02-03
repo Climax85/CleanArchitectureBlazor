@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using CleanArchitecture.Application.Common.Mappings;
+﻿using Application.Shared.Common.Mappings;
+using AutoMapper;
 using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+namespace Application.Shared.TodoLists.Queries.GetTodos;
 
 public class TodoItemDto : IMapFrom<TodoItem>
 {
