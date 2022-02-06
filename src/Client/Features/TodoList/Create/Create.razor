@@ -1,0 +1,26 @@
+﻿@using Application.Shared.TodoLists.Commands.CreateTodoList
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Title" @bind-Value="post.Title"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+ 
+    [Parameter]
+    public CreateTodoListCommand post{get;set;} = new();
+ 
+    private void Cancel(){
+        MudDialog.Cancel();
+    }
+ 
+    private void Submit(){
+        MudDialog.Close(DialogResult.Ok(post));
+    }
+}

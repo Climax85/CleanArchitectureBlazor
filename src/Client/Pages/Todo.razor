@@ -1,0 +1,168 @@
+﻿@page "/todo"
+
+@using Application.Shared.TodoLists.Queries.GetTodos
+@using Client.Features.TodoList
+@inherits BlazorState.BlazorStateComponent
+
+<PageTitle>Weather forecast</PageTitle>
+<MudGrid>
+    <MudItem xs="4">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudBadge Content="@TodoLists.Count()" Color="Color.Primary" Bordered="true" Class="mx-6 my-4">
+                        <MudText Typo="Typo.h6">Lists</MudText>
+                    </MudBadge>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTable @ref="_mudTable"
+                          T="TodoListDto"
+                          Items="TodoLists"
+                          Hover="true"
+                          SortLabel="Sort By"
+                          RowClassFunc="@SelectedRowClassFunc"
+                          OnRowClick="RowClickEvent"
+                          Virtualize="true"
+                          FixedHeader="true"
+                          Height="675px"
+                          Filter="FilterLists" >
+                    <ToolBarContent>
+                        <MudIconButton Icon="@Icons.Material.Rounded.Add" />
+                        <MudSpacer/>
+                        <MudTextField @bind-Value="listsSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>
+                            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TodoListDto, object>(x => x.Title)">Name</MudTableSortLabel>
+                        </MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">@context.Title</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    @if (CurrenTodoList != null && CurrenTodoList.Items != null)
+    {
+        <MudItem xs="8">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudBadge Content="@CurrenTodoList?.Items?.Count()" Color="Color.Primary" Bordered="true" Class="mx-6 my-4">
+                            <MudText Typo="Typo.h6">Items</MudText>
+                        </MudBadge>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTable T="TodoItemDto"
+                              Items="CurrenTodoList.Items"
+                              Hover="true"
+                              SortLabel="Sort By"
+                              Virtualize="true"
+                              FixedHeader="true"
+                              Height="675px"
+                              Filter="FilterItems">
+                        <ToolBarContent>
+                            <MudIconButton Icon="@Icons.Material.Rounded.Add" />
+                            <MudSpacer/>
+                            <MudTextField @bind-Value="itemsSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>
+                                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TodoItemDto, object>(x => x.Title)">Name</MudTableSortLabel>
+                            </MudTh>
+                            <MudTh>
+                                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TodoItemDto, object>(x => x.Priority)">Priority</MudTableSortLabel>
+                            </MudTh>
+                            <MudTh>
+                                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TodoItemDto, object>(x => x.Done)">Done</MudTableSortLabel>
+                            </MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">@context.Title</MudTd>
+                            <MudTd DataLabel="Name">@context.Priority</MudTd>
+                            <MudTd DataLabel="Name">@context.Done</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+
+@code {
+    private int _selectedRowNumber = -1;
+    private MudTable<TodoListDto> _mudTable;
+
+    private string itemsSearchString = "";
+    private string listsSearchString = "";
+
+    internal TodoListState TodoListState => GetState<TodoListState>();
+
+    public IEnumerable<TodoListDto> TodoLists => TodoListState.TodoListsAsList.AsEnumerable();
+    public IEnumerable<TodoItemDto> TodoItems => TodoListState.TodoListsAsList.First().Items;
+
+    public TodoListDto CurrenTodoList => TodoListState.CurrentTodoList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Mediator.Send(new TodoListState.FetchTodoListAction());
+    }
+
+    private string SelectedRowClassFunc(TodoListDto element, int rowNumber)
+    {
+        if (_mudTable.SelectedItem == null || _mudTable.SelectedItem.Id != element.Id)
+        {
+            return string.Empty;
+        }
+
+        _selectedRowNumber = rowNumber;
+        return "selected";
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<TodoListDto> obj)
+    {
+        Mediator.Send(new TodoListState.TodoListSelectAction(obj.Item.Id));
+    }
+
+    private bool FilterLists(TodoListDto element)
+    {
+        if (string.IsNullOrWhiteSpace(itemsSearchString))
+        {
+            return true;
+        }
+
+        if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool FilterItems(TodoItemDto element)
+    {
+        if (string.IsNullOrWhiteSpace(itemsSearchString))
+        {
+            return true;
+        }
+
+        if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+<style>
+    .selected { background-color: #1E88E5 !important; }
+
+    .selected > td { color: white !important; }
+
+    .selected > td .mud-input { color: white !important; }
+</style>

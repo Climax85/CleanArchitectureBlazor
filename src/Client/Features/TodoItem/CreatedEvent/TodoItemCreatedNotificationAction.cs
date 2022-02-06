@@ -1,11 +1,12 @@
 ﻿using Application.Shared.Common.Mappings;
 using Application.Shared.TodoItems.Events;
 using Application.Shared.TodoLists.Queries.GetTodos;
+using AutoMapper;
 using BlazorState;
 
-namespace Client.Features.TodoItem;
+namespace Client.Features.TodoList;
 
-public partial class TodoItemState
+internal partial class TodoListState
 {
     public class TodoItemCreatedNotificationAction : IAction, IMapFrom<TodoItemCreatedNotification>
     {
@@ -18,6 +19,12 @@ public partial class TodoItemState
         {
         }
 
-        public TodoItemDto Item { get; }
+        public TodoItemDto Item { get; private set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile
+                .CreateMap<TodoItemCreatedNotification, TodoItemCreatedNotificationAction>();
+        }
     }
 }

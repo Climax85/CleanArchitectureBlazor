@@ -14,23 +14,19 @@ public class NotificationJsonConverter : JsonConverter<SerializedNotification>
             .SelectMany(s => s.GetTypes())
             .Where(p => type.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
             .ToList();
-        Console.WriteLine(string.Join("\n", _types));
     }
 
     public override SerializedNotification Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        Console.WriteLine("SerializedNotification.Read");
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new JsonException();
         }
-        Console.WriteLine("SerializedNotification.Read2");
 
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {   
             if (!jsonDocument.RootElement.TryGetProperty("notificationType", out var typeProperty))
             {
-                Console.WriteLine("SerializedNotification.notificationType not found");
                 throw new JsonException();
             }
             var type = _types.FirstOrDefault(x => x.Name == typeProperty.GetString());
@@ -39,14 +35,10 @@ public class NotificationJsonConverter : JsonConverter<SerializedNotification>
                 throw new JsonException();
             }
 
-            Console.WriteLine($"SerializedNotification.type: {type}");
-
             var jsonObject = jsonDocument.RootElement.GetRawText();
-            Console.WriteLine($"SerializedNotification.jsonObject: {jsonObject}");
             try
             {
                 var result = JsonSerializer.Deserialize(jsonObject, type, options);
-                Console.WriteLine($"SerializedNotification.result: {result.GetType().FullName}");
                 return (SerializedNotification)result;
             }
             catch (Exception e)
@@ -59,7 +51,6 @@ public class NotificationJsonConverter : JsonConverter<SerializedNotification>
 
     public override void Write(Utf8JsonWriter writer, SerializedNotification value, JsonSerializerOptions options)
     {
-        Console.WriteLine("SerializedNotification.Write");
         JsonSerializer.Serialize(writer, (object)value, options);
     }
 }
