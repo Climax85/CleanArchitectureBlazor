@@ -4,6 +4,20 @@
 // </auto-generated>
 //----------------------
 
+using Application.Shared.Common.Models;
+using Application.Shared.TodoItems.Commands.CreateTodoItem;
+using Application.Shared.TodoItems.Commands.DeleteTodoItem;
+using Application.Shared.TodoItems.Commands.UpdateTodoItem;
+using Application.Shared.TodoItems.Commands.UpdateTodoItemDetail;
+using Application.Shared.TodoItems.Queries.GetTodoItemsWithPagination;
+using Application.Shared.TodoLists.Commands.CreateTodoList;
+using Application.Shared.TodoLists.Commands.DeleteTodoList;
+using Application.Shared.TodoLists.Commands.PurgeTodoLists;
+using Application.Shared.TodoLists.Commands.UpdateTodoList;
+using Application.Shared.TodoLists.Queries.GetTodos;
+using Application.Shared.TodoLists.Queries.ExportTodos;
+using Application.Shared.WeatherForecasts.Queries.GetWeatherForecasts;
+
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
 #pragma warning disable 114 // Disable "CS0114 '{derivedDto}.RaisePropertyChanged(String)' hides inherited member 'dtoBase.RaisePropertyChanged(String)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword."
 #pragma warning disable 472 // Disable "CS0472 The result of the expression is always 'false' since a value of type 'Int32' is never equal to 'null' of type 'Int32?'
@@ -52,14 +66,14 @@ namespace BlazorUI.Services
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<PaginatedListOfTodoItemBriefDto> GetTodoItemsWithPaginationAsync(int? listId, int? pageNumber, int? pageSize)
+        public System.Threading.Tasks.Task<PaginatedList<TodoItemBriefDto>> GetTodoItemsWithPaginationAsync(int? listId, int? pageNumber, int? pageSize)
         {
             return GetTodoItemsWithPaginationAsync(listId, pageNumber, pageSize, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<PaginatedListOfTodoItemBriefDto> GetTodoItemsWithPaginationAsync(int? listId, int? pageNumber, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<PaginatedList<TodoItemBriefDto>> GetTodoItemsWithPaginationAsync(int? listId, int? pageNumber, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/TodoItems?");
@@ -109,7 +123,7 @@ namespace BlazorUI.Services
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<PaginatedListOfTodoItemBriefDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<PaginatedList<TodoItemBriefDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);

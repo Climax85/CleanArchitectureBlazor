@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using Application.Shared.Common.Security;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Security;
 using MediatR;
 
 namespace CleanArchitecture.Application.Common.Behaviours;

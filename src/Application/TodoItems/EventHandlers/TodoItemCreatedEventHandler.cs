@@ -1,8 +1,8 @@
-﻿using Application.Shared.TodoItems.Events;
+﻿using Application.Shared.Common.Models;
+using Application.Shared.TodoItems.Events;
 using Application.Shared.TodoLists.Queries.GetTodos;
 using AutoMapper;
 using CleanArchitecture.Application.Common.Hubs;
-using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;

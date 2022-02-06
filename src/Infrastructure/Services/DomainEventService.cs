@@ -1,5 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Models;
+﻿using Application.Shared.Common.Models;
+using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;

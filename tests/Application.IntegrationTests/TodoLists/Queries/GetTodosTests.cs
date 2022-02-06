@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+﻿using Application.Shared.TodoLists.Queries.GetTodos;
+using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.ValueObjects;
 using FluentAssertions;
