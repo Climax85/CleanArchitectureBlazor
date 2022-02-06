@@ -90,6 +90,8 @@ public class Startup
             app.UseHsts();
         }
 
+        app.UseCors(policy => policy.WithOrigins("https://localhost:7058").AllowAnyMethod().AllowAnyHeader());
+
         app.UseHealthChecks("/health");
         app.UseHttpsRedirection();
         app.UseStaticFiles();
