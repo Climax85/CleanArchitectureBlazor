@@ -8,6 +8,8 @@ public class TodoListConfiguration : IEntityTypeConfiguration<TodoList>
 {
     public void Configure(EntityTypeBuilder<TodoList> builder)
     {
+        builder.Ignore(e => e.DomainEvents);
+
         builder.Property(t => t.Title)
             .HasMaxLength(200)
             .IsRequired();

@@ -1,6 +1,7 @@
 ﻿using Application.Shared.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Events;
 using MediatR;
 
 namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
@@ -19,6 +20,8 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListComman
         var entity = new TodoList();
 
         entity.Title = request.Title;
+
+        entity.DomainEvents.Add(new TodoListCreatedEvent(entity));
 
         _context.TodoLists.Add(entity);
 
