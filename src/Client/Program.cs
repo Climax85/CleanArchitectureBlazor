@@ -2,6 +2,7 @@ using System.Reflection;
 using Application.Shared.Common.EventHandlers;
 using Application.Shared.Common.Mappings;
 using Application.Shared.TodoItems.Events;
+using Application.Shared.TodoLists.Events;
 using AutoMapper;
 using BlazorState;
 using BlazorUI.Services;
@@ -23,7 +24,11 @@ internal class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         // TODO: MappingProfile nutzen
-        builder.Services.AddAutoMapper(expression => expression.CreateProfile("Test", profileExpression => profileExpression.CreateMap<TodoItemCreatedNotification, TodoListState.TodoItemCreatedNotificationAction>()));
+        builder.Services.AddAutoMapper(expression => expression.CreateProfile("Test", profileExpression =>
+        {
+            profileExpression.CreateMap<TodoItemCreatedNotification, TodoListState.TodoItemCreatedNotificationAction>();
+            profileExpression.CreateMap<TodoListCreatedNotification, TodoListState.TodoListCreatedNotificationAction>();
+        }));
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddTransient(factory =>
