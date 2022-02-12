@@ -1,5 +1,4 @@
-﻿using Application.Shared.TodoLists.Commands.CreateTodoList;
-using BlazorState;
+﻿using BlazorState;
 using BlazorUI.Services;
 using MediatR;
 
@@ -18,7 +17,7 @@ internal partial class TodoListState
 
         public override async Task<Unit> Handle(CreateTodoListAction aAction, CancellationToken aCancellationToken)
         {
-            await _client.CreateAsync(new CreateTodoListCommand(), aCancellationToken);
+            await _client.CreateAsync(aAction.CreateTodoListCommand, aCancellationToken);
 
             return await Unit.Task;
         }

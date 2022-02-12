@@ -4,6 +4,8 @@
 @using Client.Features.TodoList
 @inherits BlazorState.BlazorStateComponent
 
+@inject IDialogService DialogService
+
 <PageTitle>Weather forecast</PageTitle>
 <MudGrid>
     <MudItem xs="4">
@@ -28,7 +30,7 @@
                           Height="675px"
                           Filter="FilterLists" >
                     <ToolBarContent>
-                        <MudIconButton Icon="@Icons.Material.Rounded.Add" />
+                        <MudIconButton Icon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog"  />
                         <MudSpacer/>
                         <MudTextField @bind-Value="listsSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
@@ -109,54 +111,61 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Mediator.Send(new TodoListState.FetchTodoListAction());
+    await Mediator.Send(new TodoListState.FetchTodoListAction());
     }
 
     private string SelectedRowClassFunc(TodoListDto element, int rowNumber)
     {
-        if (_mudTable.SelectedItem == null || _mudTable.SelectedItem.Id != element.Id)
-        {
-            return string.Empty;
-        }
+    if (_mudTable.SelectedItem == null || _mudTable.SelectedItem.Id != element.Id)
+    {
+        return string.Empty;
+    }
 
-        _selectedRowNumber = rowNumber;
-        return "selected";
+    _selectedRowNumber = rowNumber;
+    return "selected";
     }
 
     private void RowClickEvent(TableRowClickEventArgs<TodoListDto> obj)
     {
-        Mediator.Send(new TodoListState.TodoListSelectAction(obj.Item.Id));
+    Mediator.Send(new TodoListState.TodoListSelectAction(obj.Item.Id));
     }
 
     private bool FilterLists(TodoListDto element)
     {
-        if (string.IsNullOrWhiteSpace(itemsSearchString))
-        {
-            return true;
-        }
+    if (string.IsNullOrWhiteSpace(itemsSearchString))
+    {
+        return true;
+    }
 
-        if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
+    if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
+    {
+        return true;
+    }
 
-        return false;
+    return false;
     }
 
     private bool FilterItems(TodoItemDto element)
     {
-        if (string.IsNullOrWhiteSpace(itemsSearchString))
-        {
-            return true;
-        }
-
-        if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return false;
+    if (string.IsNullOrWhiteSpace(itemsSearchString))
+    {
+        return true;
     }
+
+    if (element.Title.Contains(itemsSearchString, StringComparison.OrdinalIgnoreCase))
+    {
+        return true;
+    }
+
+    return false;
+    }
+
+    private async Task OpenCreateDialog()
+    {
+        DialogService.Show<Features.TodoList.Create.Create>("Create Item");
+    }
+
+
 }
 
 <style>
