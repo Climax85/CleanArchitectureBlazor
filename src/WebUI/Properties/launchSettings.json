@@ -18,6 +18,7 @@
     "CleanArchitecture.WebUI": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "api",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },

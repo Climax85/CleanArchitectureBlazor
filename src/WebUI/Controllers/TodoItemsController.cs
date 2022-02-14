@@ -4,16 +4,16 @@ using Application.Shared.TodoItems.Commands.DeleteTodoItem;
 using Application.Shared.TodoItems.Commands.UpdateTodoItem;
 using Application.Shared.TodoItems.Commands.UpdateTodoItemDetail;
 using Application.Shared.TodoItems.Queries.GetTodoItemsWithPagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.WebUI.Controllers;
 
-[Authorize]
+//[Authorize]
 public class TodoItemsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<TodoItemBriefDto>>> GetTodoItemsWithPagination([FromQuery] GetTodoItemsWithPaginationQuery query)
+    public async Task<ActionResult<PaginatedList<TodoItemBriefDto>>> GetTodoItemsWithPagination(
+        [FromQuery] GetTodoItemsWithPaginationQuery query)
     {
         return await Mediator.Send(query);
     }
