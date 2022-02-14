@@ -1,0 +1,39 @@
+﻿@using Client.Features.TodoList
+@using MediatR
+@using Microsoft.AspNetCore.Components
+@using Application.Shared.TodoItems.Commands.CreateTodoItem
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Title" @bind-Value="Post.Title"/>
+        <MudTextField T="string" Label="Note" @bind-Value="Post.Note"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+ 
+    [Parameter]
+    public CreateTodoItemCommand Post { get; set; } = new();
+
+    [Parameter]
+    public int ListId { get; set; }
+
+    [Inject]
+    public IMediator Mediator { get; set; }
+ 
+    private void Cancel(){
+        MudDialog.Cancel();
+    }
+ 
+    private async Task Submit()
+    {
+        Post.ListId = ListId;
+        await Mediator.Send(new TodoListState.CreateTodoItemAction{ CreateTodoItemCommand = Post });
+        MudDialog.Close(DialogResult.Ok(Post));
+    }
+}

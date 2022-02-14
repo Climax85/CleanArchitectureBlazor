@@ -2,6 +2,7 @@
 
 @using Application.Shared.TodoLists.Queries.GetTodos
 @using Client.Features.TodoList
+@using Application.Shared.TodoItems.Commands.CreateTodoItem
 @inherits BlazorState.BlazorStateComponent
 
 @inject IDialogService DialogService
@@ -30,7 +31,7 @@
                           Height="675px"
                           Filter="FilterLists" >
                     <ToolBarContent>
-                        <MudIconButton Icon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog"  />
+                        <MudIconButton Icon="@Icons.Material.Rounded.Add" OnClick="OpenCreateListDialog"  />
                         <MudSpacer/>
                         <MudTextField @bind-Value="listsSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
@@ -67,7 +68,7 @@
                               Height="675px"
                               Filter="FilterItems">
                         <ToolBarContent>
-                            <MudIconButton Icon="@Icons.Material.Rounded.Add" />
+                            <MudIconButton Icon="@Icons.Material.Rounded.Add" OnClick="OpenCreateItemDialog" />
                             <MudSpacer/>
                             <MudTextField @bind-Value="itemsSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                         </ToolBarContent>
@@ -160,9 +161,14 @@
     return false;
     }
 
-    private async Task OpenCreateDialog()
+    private async Task OpenCreateListDialog()
     {
-        DialogService.Show<Features.TodoList.Create.Create>("Create Item");
+        DialogService.Show<Features.TodoList.Create.Create>("Create List Item");
+    }
+
+    private async Task OpenCreateItemDialog()
+    {
+        DialogService.Show<Features.TodoItem.Create.Create>("Create Item", new DialogParameters{ [nameof(CreateTodoItemCommand.ListId)] = CurrenTodoList.Id });
     }
 
 
